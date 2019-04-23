@@ -9,6 +9,7 @@ class View extends Component {
     this.view = React.createRef();
     this.state = {
       selection: null,
+      radiScale: 10,
     }
   }
 
@@ -51,7 +52,7 @@ class View extends Component {
       .range([0, w/2-50]);
     const radiScale = d3.scaleLinear()
       .domain([0, data.reduce((max, d) => Math.max(max, d.r), 0)])
-      .range([0, 100]);
+      .range([0, 1]);
     data.forEach(d => {
       d.R = distScale(d.R);
       d.r = radiScale(d.r);
@@ -94,7 +95,7 @@ class View extends Component {
       .append("g")
         .attr("class", "planet_cluster")
       .append("circle")
-        .attr("r", d => d.r)
+        .attr("r", d => d.r * this.state.radiScale)
         .attr("cx", d => d.R)
         .attr("id", d => `p${d.i}`)
         .attr("class", "planet")
@@ -130,7 +131,8 @@ class View extends Component {
   updateView() {
     const svg = d3.select(this.view.current);
     svg.selectAll(".orbit").classed("hidden", d => d.hidden);
-    svg.selectAll(".planet_cluster").classed("hidden", d => d.hidden);
+    svg.selectAll(".planet_cluster").classed("hidden", d => d.hidden)
+      .selectAll("circle").attr("r", d => d.r * this.state.radiScale);
   }
 
   clearSelected() {
@@ -139,12 +141,16 @@ class View extends Component {
     this.setState({ selection: null });
   }
 
+  handleRadiusScaleChange(radiScale) {
+    this.setState({ radiScale });
+  }
+
   render() {
     this.planets.forEach(p => {
       p.hidden = !this.props.data[p.star].selected;
     });
     this.updateView();
-    const selection = this.state.selection;
+    const { selection, radiScale } = this.state;
     return (
       <div className="View">
         <svg ref={this.view} />
@@ -154,6 +160,11 @@ class View extends Component {
             closeListener={() => this.clearSelected()}
           />
         }
+        <input className="radi-slider"
+          type="range"
+          min="5" max="100" step="5" value={radiScale}
+          onChange={e => this.handleRadiusScaleChange(e.target.value)}
+        />
       </div>
     )
   }

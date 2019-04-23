@@ -11,10 +11,11 @@ body {
 .orbit { stroke: #222; fill: none; }
 .orbit.hover { stroke: #334; stroke-width: 3; }
 .orbit.selected { stroke: #446; stroke-width: 3; }
-.planet { stroke-width: 0; fill: #ffffff66; }
-.planet.hover { fill: #ccccffaa; }
+.planet { stroke-width: 0; fill: #ffffffaa; }
+.planet.hover { fill: #ccccffcc; }
 .planet.selected { fill: #88f; }
 .dist-axis * { stroke: #fff !important; }
+.radi-slider { position: absolute; left: 40px; bottom: 40px; }
 
 .info-card {
   position: absolute;
