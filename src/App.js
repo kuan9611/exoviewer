@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Papa from 'papaparse';
 import View from './View';
 import Table from './Table';
 import './App.css';
@@ -12,9 +13,14 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const csvPath = require('./catalog.csv');
-    const Papa = require('papaparse/papaparse.min.js');
-    Papa.parse(csvPath, {
+    Papa.parse(require('./catalog.csv'), {
+      header: true,
+      download: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: result => this.updateData(result.data),
+    });
+    Papa.parse(require('./solar.csv'), {
       header: true,
       download: true,
       dynamicTyping: true,
@@ -48,7 +54,7 @@ class App extends Component {
       }).planets.push(p);
       return res;
     }, {})
-    this.setState({ data });
+    this.setState({ data: {...this.state.data, ...data} });
   }
 
   handleSelectionChange(s) {

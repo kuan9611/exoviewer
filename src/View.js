@@ -51,7 +51,7 @@ class View extends Component {
       .range([0, w/2-50]);
     const radiScale = d3.scaleLinear()
       .domain([0, data.reduce((max, d) => Math.max(max, d.r), 0)])
-      .range([0, 10]);
+      .range([0, 100]);
     data.forEach(d => {
       d.R = distScale(d.R);
       d.r = radiScale(d.r);
