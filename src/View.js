@@ -36,7 +36,7 @@ class View extends Component {
         hidden: !x.selected,
       })));
     });
-    this.planets = planets.flat().map((p, i) => ({...p, i}));
+    this.planets = [].concat.apply([], planets).map((p, i) => ({...p, i}));
   }
 
   makeView() {
