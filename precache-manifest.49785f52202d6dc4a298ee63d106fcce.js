@@ -12,15 +12,15 @@ self.__precacheManifest = [
     "url": "/exoviewer/static/js/runtime~main.6d8bcdd0.js"
   },
   {
-    "revision": "ddeb3e9628a02f0b7708",
-    "url": "/exoviewer/static/js/main.434f79fd.chunk.js"
+    "revision": "a26c9788e795e01716ed",
+    "url": "/exoviewer/static/js/main.ed4ace82.chunk.js"
   },
   {
     "revision": "18d6b71894ebad417adc",
     "url": "/exoviewer/static/js/2.443582cb.chunk.js"
   },
   {
-    "revision": "ddeb3e9628a02f0b7708",
+    "revision": "a26c9788e795e01716ed",
     "url": "/exoviewer/static/css/main.99fd60de.chunk.css"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = [
     "url": "/exoviewer/static/css/2.cbc4a481.chunk.css"
   },
   {
-    "revision": "5e45369de050915256bbaf31af2b04e4",
+    "revision": "f9452a0456592ef67c3e570ccea5a6fc",
     "url": "/exoviewer/index.html"
   }
 ];
