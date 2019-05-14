@@ -20,16 +20,21 @@ class View extends Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", () => this.makeView());
+  }
+
   componentWillUnmount() {
     clearInterval(this.interval);
+    window.removeEventListener("resize", () => this.makeView());
   }
 
   makePlanets() {
     this.planets = this.props.data.map(p => ({
       ...p,
       i: p.indx,
-      R: p.dist,
-      r: p.radi || Math.pow(p.mass, 0.32143),
+      _R: p.dist,
+      _r: p.radi || Math.pow(p.mass, 0.32143),
       v: 0.1/p.perd,
       hidden: !p.selected,
     }));
@@ -39,19 +44,19 @@ class View extends Component {
     clearInterval(this.interval);
     const t0 = new Date().setHours(0,0,0,0);
 
-    const w = window.innerWidth - 250;
+    const w = window.innerWidth - 300;
     const h = window.innerHeight;
 
     const data = this.planets;
     const distScale = d3.scaleLinear()
       .domain([0, 1])
-      .range([0, w/2-50]);
+      .range([0, w/2-60]);
     const radiScale = d3.scaleLinear()
-      .domain([0, data.reduce((max, d) => Math.max(max, d.r), 0)])
+      .domain([0, data.reduce((max, d) => Math.max(max, d._r), 0)])
       .range([0, 1]);
     data.forEach(d => {
-      d.R = distScale(d.R);
-      d.r = radiScale(d.r);
+      d.R = distScale(d._R);
+      d.r = radiScale(d._r);
     });
 
     const svg = d3.select(this.view.current)
@@ -84,6 +89,7 @@ class View extends Component {
         .attr("r", d => d.R)
         .attr("id", d => `o${d.i}`)
         .attr("class", "orbit")
+        .classed("selected", d => d === this.state.selection)
         .on("mouseover", d => handleHover(d, true))
         .on("mouseout", d => handleHover(d, false))
         .on("click", d => handleClick(d));
@@ -95,6 +101,7 @@ class View extends Component {
         .attr("cx", d => d.R)
         .attr("id", d => `p${d.i}`)
         .attr("class", "planet")
+        .classed("selected", d => d === this.state.selection)
         .on("mouseover", d => handleHover(d, true))
         .on("mouseout", d => handleHover(d, false))
         .on("click", d => handleClick(d));

@@ -4,7 +4,7 @@ body {
   overflow: hidden;
 }
 
-.View { position: absolute; left: 250px; }
+.View { position: absolute; left: 300px; }
 .View>svg { background: #000; }
 .hidden { display: none; }
 #sun { fill: #c00; }
@@ -28,6 +28,8 @@ body {
 .info-card span { color: #fff !important; }
 .info-card-link { position: absolute !important; right: 8px; }
 
-.Table { width: 250px; }
+.Table { position: absolute; background: white; height: 100vh; }
 .Table .clear-filter { padding: 0; margin-top: 3px; }
 .ReactTable { height: 100vh; font-size: 12px; }
+.ReactTable .rt-td { padding-bottom: 0; }
+.ReactTable input { margin-top: 0; }

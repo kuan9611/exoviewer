@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { ResizableBox } from 'react-resizable';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ReactTable from 'react-table';
+
 import 'react-table/react-table.css';
+import 'react-resizable/css/styles.css';
 
 class Table extends Component {
   constructor(props) {
@@ -108,23 +111,34 @@ class Table extends Component {
           }
         } : {});
     };
+
+    const h = window.innerHeight;
    
     return (
       <div className="Table">
-        <ReactTable
-          ref={this.table}
-          data={this.props.data}
-          columns={columns}
-          showPageSizeOptions={false}
-          resizable={false}
-          filterable={true}
-          filtered={this.state.filters}
-          onFilteredChange={filters => this.setState({ filters })}
-          defaultFilterMethod={filterCaseInsensitive}
-          getTrProps={trProps}
-          pageText=""
-          noDataText="No results found"
-        />
+        <ResizableBox
+          width={300}
+          height={h}
+          axis="x"
+          resizeHandles={["e"]}
+          minConstraints={[300, h]}
+          maxConstraints={[900, h]}
+        >
+          <ReactTable
+            ref={this.table}
+            data={this.props.data}
+            columns={columns}
+            showPageSizeOptions={false}
+            resizable={false}
+            filterable={true}
+            filtered={this.state.filters}
+            onFilteredChange={filters => this.setState({ filters })}
+            defaultFilterMethod={filterCaseInsensitive}
+            getTrProps={trProps}
+            pageText=""
+            noDataText="No results found"
+          />
+        </ResizableBox>
       </div>
     );
   }
