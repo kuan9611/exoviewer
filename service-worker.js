@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/exoviewer/precache-manifest.49785f52202d6dc4a298ee63d106fcce.js"
+  "/exoviewer/precache-manifest.11c38e1ad963863d2961717ef15d57fc.js"
 );
 
 workbox.clientsClaim();
