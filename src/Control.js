@@ -9,7 +9,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 
 class Control extends React.Component {
   render() {
-    const { rFactor, vFactor, rFactorListener, vFactorListener } = this.props;
+    const { rFactor, vFactor, showScale,
+      rFactorListener, vFactorListener, showScaleListener } = this.props;
     return (
       <ExpansionPanel className="control-panel overlay">
         <ExpansionPanelSummary
@@ -21,19 +22,27 @@ class Control extends React.Component {
         <ExpansionPanelDetails>
           <List>
             <ListItem>
-              <ListItemText primary="Radius" />
-              <input className="r-slider"
+              <ListItemText primary="radius" />
+              <input
                 type="range"
                 min="5" max="100" step="5" value={rFactor}
                 onChange={e => rFactorListener(e.target.value)}
               />
             </ListItem>
             <ListItem>
-              <ListItemText primary="Speed" />
-              <input className="v-slider"
+              <ListItemText primary="speed" />
+              <input
                 type="range"
                 min="-5" max="3" step="1" value={vFactor}
                 onChange={e => vFactorListener(e.target.value)}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="show scale" />
+              <input
+                type="checkbox"
+                checked={showScale}
+                onChange={showScaleListener}
               />
             </ListItem>
           </List>

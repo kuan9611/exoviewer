@@ -9,6 +9,7 @@ class View extends Component {
     this.planets = [];
     this.view = React.createRef();
     this.state = {
+      showScale: true,
       selection: null,
       rFactor: 10,
       vFactor: -1,
@@ -112,7 +113,8 @@ class View extends Component {
     const distAxis = d3.axisBottom(distScale).ticks(5);
     const gDistAxisGroup = svg.append("g")
       .attr('transform', `translate(${w/2},${h-50})`)
-      .attr("class", "dist-axis");
+      .attr("class", "dist-axis")
+      .classed("hidden", !this.state.showScale);
     gDistAxisGroup.append("text")
         .attr("text-anchor", "middle")
         .attr("transform", `translate(${w/4-25},${35})`)
@@ -139,6 +141,7 @@ class View extends Component {
     svg.selectAll(".orbit").classed("hidden", d => d.hidden);
     svg.selectAll(".planet_cluster").classed("hidden", d => d.hidden)
       .selectAll("circle").attr("r", d => d.r * this.state.rFactor);
+    svg.select(".dist-axis").classed("hidden", !this.state.showScale);
   }
 
   clearSelected() {
@@ -155,12 +158,16 @@ class View extends Component {
     this.setState({ vFactor });
   }
 
+  toggleShowScale() {
+    this.setState({ showScale: !this.state.showScale });
+  }
+
   render() {
     this.planets.forEach(p => {
       p.hidden = !this.props.data[p.i].selected;
     });
     this.updateView();
-    const { selection, rFactor, vFactor } = this.state;
+    const { selection, rFactor, vFactor, showScale } = this.state;
     return (
       <div className="View">
         <svg ref={this.view} />
@@ -173,8 +180,10 @@ class View extends Component {
         <Control
           rFactor={rFactor}
           vFactor={vFactor}
+          showScale={showScale}
           rFactorListener={rf => this.handleRadiusFactorChange(rf)}
           vFactorListener={vf => this.handleVelocityFactorChange(vf)}
+          showScaleListener={() => this.toggleShowScale()}
         />
       </div>
     )

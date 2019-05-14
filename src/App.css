@@ -30,7 +30,7 @@ body {
   width: 230px;
 }
 .control-panel span { font-size: 12px !important; }
-.control-panel li { padding: 0 !important; }
+.control-panel li { padding: 0 0 5px !important; }
 
 .info-card { top: 10px; right: 10px; width: 300px; }
 .info-card-link { position: absolute !important; right: 8px; }
