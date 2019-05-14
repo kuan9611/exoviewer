@@ -29,4 +29,5 @@ body {
 .info-card-link { position: absolute !important; right: 8px; }
 
 .Table { width: 250px; }
+.Table .clear-filter { padding: 0; margin-top: 3px; }
 .ReactTable { height: 100vh; font-size: 12px; }

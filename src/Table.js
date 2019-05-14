@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
@@ -8,6 +10,7 @@ class Table extends Component {
     this.table = React.createRef();
     this.state = {
       selectAll: true,
+      filters: [],
     };
   }
 
@@ -26,13 +29,22 @@ class Table extends Component {
   render() {   
     const columns = [{
       accessor: "selected",
-      Header: () => (
+      Header: (
         <input
           type="checkbox"
           className="checkbox"
           checked={this.state.selectAll}
           onChange={() => this.toggleSelectAll()}
         />
+      ),
+      Filter: (
+        <IconButton
+          className="clear-filter"
+          title="Clear all filters"
+          onClick={() => this.setState({ filters: [] })}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
       ),
       Cell: ({ original }) => (
         <input readOnly
@@ -41,7 +53,6 @@ class Table extends Component {
           checked={this.props.data[original.indx].selected}
         />
       ),
-      filterable: false,
       sortable: false,
       width: 30,
     }, {
@@ -53,11 +64,11 @@ class Table extends Component {
       accessor: "star",
       width: 150,
     }, {
-      Header: () => (<span>Mass (M<sub>J</sub>)</span>),
+      Header: <span>Mass (M<sub>J</sub>)</span>,
       accessor: "mass",
       width: 80,
     }, {
-      Header: () => (<span>Radius (R<sub>J</sub>)</span>),
+      Header: <span>Radius (R<sub>J</sub>)</span>,
       accessor: "radi",
       width: 80,
     }, {
@@ -107,6 +118,8 @@ class Table extends Component {
           showPageSizeOptions={false}
           resizable={false}
           filterable={true}
+          filtered={this.state.filters}
+          onFilteredChange={filters => this.setState({ filters })}
           defaultFilterMethod={filterCaseInsensitive}
           getTrProps={trProps}
           pageText=""
