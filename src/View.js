@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Control from './Control';
 import Info from './Info';
 import * as d3 from 'd3';
 
@@ -9,7 +10,8 @@ class View extends Component {
     this.view = React.createRef();
     this.state = {
       selection: null,
-      radiScale: 10,
+      rFactor: 10,
+      vFactor: -1,
     }
   }
 
@@ -35,7 +37,7 @@ class View extends Component {
       i: p.indx,
       _R: p.dist,
       _r: p.radi || Math.pow(p.mass, 0.32143),
-      v: 0.1/p.perd,
+      v: 1/p.perd,
       hidden: !p.selected,
     }));
   }
@@ -97,7 +99,7 @@ class View extends Component {
       .append("g")
         .attr("class", "planet_cluster")
       .append("circle")
-        .attr("r", d => d.r * this.state.radiScale)
+        .attr("r", d => d.r * this.state.rFactor)
         .attr("cx", d => d.R)
         .attr("id", d => `p${d.i}`)
         .attr("class", "planet")
@@ -126,7 +128,8 @@ class View extends Component {
     this.interval = setInterval(() => {
       svg.selectAll(".planet_cluster")
         .attr("transform", d => {
-          return `rotate(${(Date.now() - t0) * d.v})`;
+          const v = d.v * Math.pow(2, this.state.vFactor);
+          return `rotate(${(Date.now() - t0) * v})`;
         });
     }, 100);
   }
@@ -135,7 +138,7 @@ class View extends Component {
     const svg = d3.select(this.view.current);
     svg.selectAll(".orbit").classed("hidden", d => d.hidden);
     svg.selectAll(".planet_cluster").classed("hidden", d => d.hidden)
-      .selectAll("circle").attr("r", d => d.r * this.state.radiScale);
+      .selectAll("circle").attr("r", d => d.r * this.state.rFactor);
   }
 
   clearSelected() {
@@ -144,8 +147,12 @@ class View extends Component {
     this.setState({ selection: null });
   }
 
-  handleRadiusScaleChange(radiScale) {
-    this.setState({ radiScale });
+  handleRadiusFactorChange(rFactor) {
+    this.setState({ rFactor });
+  }
+
+  handleVelocityFactorChange(vFactor) {
+    this.setState({ vFactor });
   }
 
   render() {
@@ -153,7 +160,7 @@ class View extends Component {
       p.hidden = !this.props.data[p.i].selected;
     });
     this.updateView();
-    const { selection, radiScale } = this.state;
+    const { selection, rFactor, vFactor } = this.state;
     return (
       <div className="View">
         <svg ref={this.view} />
@@ -163,10 +170,11 @@ class View extends Component {
             closeListener={() => this.clearSelected()}
           />
         }
-        <input className="radi-slider"
-          type="range"
-          min="5" max="100" step="5" value={radiScale}
-          onChange={e => this.handleRadiusScaleChange(e.target.value)}
+        <Control
+          rFactor={rFactor}
+          vFactor={vFactor}
+          rFactorListener={rf => this.handleRadiusFactorChange(rf)}
+          vFactorListener={vf => this.handleVelocityFactorChange(vf)}
         />
       </div>
     )

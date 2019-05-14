@@ -15,7 +15,7 @@ class Info extends React.Component {
   render() {
     const info = this.props.info;
     return (
-      <Card className="info-card">
+      <Card className="info-card overlay">
         <CardHeader
           action={
             <div>
