@@ -29,5 +29,4 @@ body {
 .info-card-link { position: absolute !important; right: 8px; }
 
 .Table { width: 250px; }
-.ReactTable { height: 95vh; font-size: 12px; }
-.select-bar button { width: 50%; }
+.ReactTable { height: 100vh; font-size: 12px; }

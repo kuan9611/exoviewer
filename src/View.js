@@ -14,8 +14,7 @@ class View extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (Object.keys(prevProps.data).length < 
-      Object.keys(this.props.data).length) {
+    if (prevProps.data.length < this.props.data.length) {
       this.makePlanets();
       this.makeView();
     }
@@ -26,17 +25,14 @@ class View extends Component {
   }
 
   makePlanets() {
-    const planets = [];
-    Object.values(this.props.data).forEach(x => {
-      planets.push(x.planets.map(p => ({
-        ...p,
-        R: p.dist,
-        r: p.radi || Math.pow(p.mass, 0.32143),
-        v: 0.1/p.perd,
-        hidden: !x.selected,
-      })));
-    });
-    this.planets = [].concat.apply([], planets).map((p, i) => ({...p, i}));
+    this.planets = this.props.data.map(p => ({
+      ...p,
+      i: p.indx,
+      R: p.dist,
+      r: p.radi || Math.pow(p.mass, 0.32143),
+      v: 0.1/p.perd,
+      hidden: !p.selected,
+    }));
   }
 
   makeView() {
@@ -147,7 +143,7 @@ class View extends Component {
 
   render() {
     this.planets.forEach(p => {
-      p.hidden = !this.props.data[p.star].selected;
+      p.hidden = !this.props.data[p.i].selected;
     });
     this.updateView();
     const { selection, radiScale } = this.state;
