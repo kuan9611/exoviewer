@@ -12,7 +12,7 @@ class View extends Component {
       showScale: true,
       selection: null,
       rFactor: 10,
-      vFactor: -1,
+      vFactor: -2,
     }
   }
 

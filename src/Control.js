@@ -33,7 +33,7 @@ class Control extends React.Component {
               <ListItemText primary="speed" />
               <input
                 type="range"
-                min="-5" max="3" step="1" value={vFactor}
+                min="-6" max="3" step="1" value={vFactor}
                 onChange={e => vFactorListener(e.target.value)}
               />
             </ListItem>
