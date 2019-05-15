@@ -39,4 +39,10 @@ body {
 .Table .clear-filter { padding: 0; margin-top: 3px; }
 .ReactTable { height: 100vh; font-size: 12px; }
 .ReactTable .rt-td { padding-bottom: 0; }
-.ReactTable input { margin-top: 0; }
+.ReactTable span.-pageInfo { margin: 0 !important; }
+.ReactTable input[type=checkbox] { margin-top: 0; }
+.ReactTable input[type=number]::-webkit-inner-spin-button,
+.ReactTable input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -29,7 +29,43 @@ class Table extends Component {
     }
   }
 
-  render() {   
+  FilterInputMinMax = ({ filter, onChange }) => {
+    const min = filter ? filter.value.min : "";
+    const max = filter ? filter.value.max : "";
+    return (
+      <div>
+        <input
+          type="number"
+          placeholder="min"
+          value={min}
+          onChange={e => onChange({ min: e.target.value, max })}
+          style={{ width: "50%" }}
+        />
+        <input
+          type="number"
+          placeholder="max"
+          value={max}
+          onChange={e => onChange({ min, max: e.target.value })}
+          style={{ width: "50%" }}
+        />
+      </div>
+    );
+  };
+
+  render() {
+    const filterCaseInsensitive = (filter, row) => {
+      const src = row[filter.pivotId || filter.id];
+      const qry = filter.value.trim().toLowerCase();
+      return src === undefined || String(src).toLowerCase().includes(qry);
+    };
+    const filterNumericalMinMax = (filter, row) => {
+      const src = row[filter.pivotId || filter.id];
+      const min = Number(filter.value.min) || 0;
+      const max = Number(filter.value.max) || Infinity;
+      const empty = !filter.value.min && !filter.value.max;
+      return empty || (src && src >= min && src <= max);
+    };
+
     const columns = [{
       accessor: "selected",
       Header: (
@@ -59,45 +95,47 @@ class Table extends Component {
       sortable: false,
       width: 30,
     }, {
-      Header: "Planet Name",
       accessor: "name",
+      Header: "Planet Name",
       width: 150,
     }, {
-      Header: "Host Star",
       accessor: "star",
+      Header: "Host Star",
       width: 150,
     }, {
-      Header: <span>Mass (M<sub>J</sub>)</span>,
       accessor: "mass",
-      width: 80,
-    }, {
-      Header: <span>Radius (R<sub>J</sub>)</span>,
-      accessor: "radi",
-      width: 80,
-    }, {
-      Header: "Orb. Period (days)",
-      accessor: "perd",
-      width: 110,
-    }, {
-      Header: "S-Major Axis (AU)",
-      accessor: "dist",
+      Header: <span>Mass (M<sub>J</sub>)</span>,
+      Filter: this.FilterInputMinMax,
+      filterMethod: filterNumericalMinMax,
       width: 120,
     }, {
-      Header: "Detection Type",
+      accessor: "radi",
+      Header: <span>Radius (R<sub>J</sub>)</span>,
+      Filter: this.FilterInputMinMax,
+      filterMethod: filterNumericalMinMax,
+      width: 120,
+    }, {
+      accessor: "perd",
+      Header: "Orb. Period (days)",
+      Filter: this.FilterInputMinMax,
+      filterMethod: filterNumericalMinMax,
+      width: 120,
+    }, {
+      accessor: "dist",
+      Header: "S-Major Axis (AU)",
+      Filter: this.FilterInputMinMax,
+      filterMethod: filterNumericalMinMax,
+      width: 120,
+    }, {
       accessor: "type",
+      Header: "Detection Type",
       sortable: false,
       width: 120,
     }, {
-      Header: "Year",
       accessor: "year",
+      Header: "Year",
       width: 60,
     }];
-
-    const filterCaseInsensitive = (filter, row) => {
-      const src = row[filter.pivotId || filter.id];
-      const qry = filter.value.toLowerCase();
-      return src === undefined || String(src).toLowerCase().includes(qry);
-    };
 
     const trProps = (state, rowInfo) => {
       return (rowInfo && rowInfo.original?
@@ -122,7 +160,7 @@ class Table extends Component {
           axis="x"
           resizeHandles={["e"]}
           minConstraints={[300, h]}
-          maxConstraints={[900, h]}
+          maxConstraints={[1000, h]}
         >
           <ReactTable
             ref={this.table}
