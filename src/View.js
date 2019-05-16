@@ -8,6 +8,7 @@ class View extends Component {
     super(props);
     this.planets = [];
     this.view = React.createRef();
+    this.zoomlevel = 1;
     this.state = {
       showScale: true,
       selection: null,
@@ -89,10 +90,8 @@ class View extends Component {
 
     container.selectAll(".orbit").data(data).enter()
       .append("circle")
-        .attr("r", d => d.R)
         .attr("id", d => `o${d.i}`)
         .attr("class", "orbit")
-        .classed("selected", d => d === this.state.selection)
         .on("mouseover", d => handleHover(d, true))
         .on("mouseout", d => handleHover(d, false))
         .on("click", d => handleClick(d));
@@ -100,31 +99,26 @@ class View extends Component {
       .append("g")
         .attr("class", "planet_cluster")
       .append("circle")
-        .attr("r", d => d.r * this.state.rFactor)
-        .attr("cx", d => d.R)
         .attr("id", d => `p${d.i}`)
         .attr("class", "planet")
-        .classed("selected", d => d === this.state.selection)
         .on("mouseover", d => handleHover(d, true))
         .on("mouseout", d => handleHover(d, false))
         .on("click", d => handleClick(d));
-    this.updateView();
 
-    const distAxis = d3.axisBottom(distScale).ticks(5);
     const gDistAxisGroup = svg.append("g")
-      .attr('transform', `translate(${w/2},${h-50})`)
-      .attr("class", "dist-axis")
-      .classed("hidden", !this.state.showScale);
+      .attr('transform', `translate(${w/2},${h-65})`)
+      .attr("class", "dist-axis");
     gDistAxisGroup.append("text")
-        .attr("text-anchor", "middle")
-        .attr("transform", `translate(${w/4-25},${35})`)
-        .text("AU");
-    const gDistAxis = gDistAxisGroup.append("g").call(distAxis);
+      .attr("text-anchor", "middle")
+      .attr("transform", `translate(${w/4-25},${35})`)
+      .text("AU");
+    gDistAxisGroup.append("g").attr("class", "dist-axis-core");
+
+    this.updateView(distScale);
+
     svg.call(d3.zoom().on("zoom", () => {
-      svg.selectAll(".orbit").attr("r", d => d.R * d3.event.transform.k);
-      svg.selectAll(".planet").attr("cx", d => d.R * d3.event.transform.k);
-      const dom = [0, distScale.domain()[1] / d3.event.transform.k];
-      gDistAxis.call(distAxis.scale(distScale.copy().domain(dom)));
+      this.zoomlevel = d3.event.transform.k;
+      this.updateView(distScale);
     }));
 
     this.interval = setInterval(() => {
@@ -136,12 +130,27 @@ class View extends Component {
     }, 100);
   }
 
-  updateView() {
+  updateView(distScale) {
     const svg = d3.select(this.view.current);
-    svg.selectAll(".orbit").classed("hidden", d => d.hidden);
-    svg.selectAll(".planet_cluster").classed("hidden", d => d.hidden)
-      .selectAll("circle").attr("r", d => d.r * this.state.rFactor);
-    svg.select(".dist-axis").classed("hidden", !this.state.showScale);
+
+    svg.selectAll(".orbit")
+      .classed("hidden", d => d.hidden)
+      .classed("selected", d => d === this.state.selection)
+      .attr("r", d => d.R * this.zoomlevel);
+    svg.selectAll(".planet_cluster")
+      .classed("hidden", d => d.hidden)
+      .selectAll("circle")
+        .classed("selected", d => d === this.state.selection)
+        .attr("cx", d => d.R * this.zoomlevel)
+        .attr("r", d => d.r * this.state.rFactor);
+    svg.select(".dist-axis")
+      .classed("hidden", !this.state.showScale);
+
+    if (distScale) {
+      const dom = [0, distScale.domain()[1] / this.zoomlevel];
+      const distAxis = d3.axisBottom(distScale.copy().domain(dom)).ticks(5);
+      svg.select(".dist-axis-core").call(distAxis);
+    }
   }
 
   clearSelected() {
@@ -168,6 +177,9 @@ class View extends Component {
     });
     this.updateView();
     const { selection, rFactor, vFactor, showScale } = this.state;
+    const count = this.props.data.reduce((acc, p) => {
+      return acc + (p.selected? 1 : 0);
+    }, 0);
     return (
       <div className="View">
         <svg ref={this.view} />
@@ -185,6 +197,21 @@ class View extends Component {
           vFactorListener={vf => this.handleVelocityFactorChange(vf)}
           showScaleListener={() => this.toggleShowScale()}
         />
+        <div className="footer overlay">
+          Showing {count} of {this.props.data.length} planets,
+          last updated May 2019.
+          Planetary radii not to scale.
+          Created by
+          <a href="https://github.com/kuan9611"
+            target="_blank" rel="noopener noreferrer">
+            kuan9611
+          </a>
+          and powered by
+          <a href="http://exoplanet.eu/"
+            target="_blank" rel="noopener noreferrer">
+            The Extrasolar Planets Encyclopaedia
+          </a>
+        </div>
       </div>
     )
   }
