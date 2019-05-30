@@ -15,7 +15,7 @@ body {
 .planet.hover { fill: #ccccffcc; }
 .planet.selected { fill: #88f; }
 .dist-axis * { stroke: #fff !important; }
-.footer { bottom: 0; width: 100%; padding: 5px 10px; font-size: 12px; }
+.footer { bottom: 0; width: 100%; padding: 5px 10px; font-size: 11px; }
 .footer a { margin: 0 5px; color: #ccf; font-weight: bold; }
 
 .overlay {
