@@ -202,9 +202,9 @@ class View extends Component {
           last updated May 2019.
           Planetary radii not to scale.
           Created by
-          <a href="https://github.com/kuan9611/exoviewer"
+          <a href="https://github.com/leafsy/exoviewer"
             target="_blank" rel="noopener noreferrer">
-            kuan9611
+            leafsy
           </a>
           and powered by
           <a href="http://exoplanet.eu/"
