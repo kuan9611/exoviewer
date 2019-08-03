@@ -2,7 +2,7 @@
   "name": "astrotunes",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://kuan9611.github.io/exoviewer",
+  "homepage": "https://leafsy.github.io/exoviewer",
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
